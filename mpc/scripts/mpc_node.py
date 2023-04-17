@@ -296,6 +296,15 @@ class MPC(Node):
             udiff = self.uk[:,k+1]-self.uk[:,k]
             controldiff += cvxpy.quad_form(udiff, self.config.Rdk)
 
+        ##### FINAL PROJECT OBJECTIVE STARTS HERE  
+        # Objective: Use the pose of the rear vehicle in MPC. Use additional MPC term to balance following the
+        #   race line with blocking the previous cars.
+
+        controldiff = 0
+        for k in range(self.config.TK-1):
+            udiff = self.uk[:,k+1]-self.uk[:,k]
+            controldiff += cvxpy.quad_form(udiff, self.config.Rdk)
+
         objective = controls+trajectory+controldiff
 
         # --------------------------------------------------------
